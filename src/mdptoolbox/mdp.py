@@ -648,6 +648,7 @@ class PolicyIteration(MDP):
             self.policy = policy0
         # set the initial values to zero
         self.V = _np.zeros(self.S)
+        self.all_P = []
         # Do some setup depending on the evaluation type
         if eval_type in (0, "matrix"):
             self.eval_type = "matrix"
@@ -813,6 +814,7 @@ class PolicyIteration(MDP):
             # This should update the classes policy attribute but leave the
             # value alone
             policy_next, null = self._bellmanOperator()
+            self.all_P.append(policy_next)
             del null
             # calculate in how many places does the old policy disagree with
             # the new policy
@@ -1372,6 +1374,8 @@ class ValueIteration(MDP):
             # threshold of variation for V for an epsilon-optimal policy
             self.thresh = epsilon
 
+        self.all_V = []
+
     def _boundIter(self, epsilon):
         # Compute a bound for the number of iterations.
         #
@@ -1429,6 +1433,7 @@ class ValueIteration(MDP):
 
             # Bellman Operator: compute policy and value functions
             self.policy, self.V = self._bellmanOperator()
+            self.all_V.append(self.V)
 
             # The values, based on Q. For the function "max()": the option
             # "axis" means the axis along which to operate. In this case it
