@@ -624,6 +624,7 @@ class PolicyIteration(MDP):
         # Set up the MDP, but don't need to worry about epsilon values
         MDP.__init__(self, transitions, reward, discount, None, max_iter,
                      skip_check=skip_check)
+        self.all_V = []
         # Check if the user has supplied an initial policy. If not make one.
         if policy0 is None:
             # Initialise the policy to the one which maximises the expected
@@ -648,7 +649,6 @@ class PolicyIteration(MDP):
             self.policy = policy0
         # set the initial values to zero
         self.V = _np.zeros(self.S)
-        self.all_P = []
         # Do some setup depending on the evaluation type
         if eval_type in (0, "matrix"):
             self.eval_type = "matrix"
@@ -798,6 +798,7 @@ class PolicyIteration(MDP):
         # V = PR + gPV  => (I-gP)V = PR  => V = inv(I-gP)* PR
         self.V = _np.linalg.solve(
             (_sp.eye(self.S, self.S) - self.discount * Ppolicy), Rpolicy)
+        self.all_V.append(self.V)
 
     def run(self):
         # Run the policy iteration algorithm.
@@ -814,7 +815,6 @@ class PolicyIteration(MDP):
             # This should update the classes policy attribute but leave the
             # value alone
             policy_next, null = self._bellmanOperator()
-            self.all_P.append(policy_next)
             del null
             # calculate in how many places does the old policy disagree with
             # the new policy
