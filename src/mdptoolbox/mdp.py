@@ -625,6 +625,7 @@ class PolicyIteration(MDP):
         MDP.__init__(self, transitions, reward, discount, None, max_iter,
                      skip_check=skip_check)
         self.all_V = []
+        self.skip_threshold = skip_threshold
         # Check if the user has supplied an initial policy. If not make one.
         if policy0 is None:
             # Initialise the policy to the one which maximises the expected
