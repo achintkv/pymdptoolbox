@@ -618,7 +618,7 @@ class PolicyIteration(MDP):
     """
 
     def __init__(self, transitions, reward, discount, policy0=None,
-                 max_iter=1000, eval_type=0, skip_check=False):
+                 max_iter=1000, eval_type=0, skip_check=False, skip_threshold=False):
         # Initialise a policy iteration MDP.
         #
         # Set up the MDP, but don't need to worry about epsilon values
@@ -824,7 +824,7 @@ class PolicyIteration(MDP):
                 _printVerbosity(self.iter, n_different)
             # Once the policy is unchanging of the maximum number of
             # of iterations has been reached then stop
-            if n_different == 0:
+            if (not self.skip_threshold) and n_different == 0:
                 if self.verbose:
                     print(_MSG_STOP_UNCHANGING_POLICY)
                 break
@@ -1355,6 +1355,7 @@ class ValueIteration(MDP):
 
         MDP.__init__(self, transitions, reward, discount, epsilon, max_iter,
                      skip_check=skip_check)
+        self.variations = []
 
         # initialization of optional arguments
         if initial_value == 0:
@@ -1440,6 +1441,7 @@ class ValueIteration(MDP):
             # "axis" means the axis along which to operate. In this case it
             # finds the maximum of the the rows. (Operates along the columns?)
             variation = _util.getSpan(self.V - Vprev)
+            self.variations.append(variation)
 
             if self.verbose:
                 _printVerbosity(self.iter, variation)
