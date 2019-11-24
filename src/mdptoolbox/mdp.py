@@ -1350,7 +1350,7 @@ class ValueIteration(MDP):
     """
 
     def __init__(self, transitions, reward, discount, epsilon=0.01,
-                 max_iter=1000, initial_value=0, skip_check=False):
+                 max_iter=1000, initial_value=0, skip_check=False, skip_threshold=False):
         # Initialise a value iteration MDP.
 
         MDP.__init__(self, transitions, reward, discount, epsilon, max_iter,
@@ -1375,6 +1375,7 @@ class ValueIteration(MDP):
             self.thresh = epsilon
 
         self.all_V = []
+        self.skip_threshold = skip_threshold
 
     def _boundIter(self, epsilon):
         # Compute a bound for the number of iterations.
@@ -1443,7 +1444,7 @@ class ValueIteration(MDP):
             if self.verbose:
                 _printVerbosity(self.iter, variation)
 
-            if variation < self.thresh:
+            if (not self.skip_threshold) and variation < self.thresh:
                 if self.verbose:
                     print(_MSG_STOP_EPSILON_OPTIMAL_POLICY)
                 break
