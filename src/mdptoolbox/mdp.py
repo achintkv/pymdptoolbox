@@ -1050,6 +1050,7 @@ class QLearning(MDP):
         # Initialisations
         self.Q = _np.zeros((self.S, self.A))
         self.mean_discrepancy = []
+        self.all_V = []
 
     def run(self):
         # Run the Q-learning algoritm.
@@ -1110,6 +1111,7 @@ class QLearning(MDP):
 
             # compute the value function and the policy
             self.V = self.Q.max(axis=1)
+            self.all_V.append(self.V)
             self.policy = self.Q.argmax(axis=1)
 
         self._endRun()
